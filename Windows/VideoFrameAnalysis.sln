@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveCameraSample", "LiveCameraSample\LiveCameraSample.csproj", "{5B40977E-E8FA-41BC-8F0A-6D6FDE237571}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoFrameAnalyzer", "VideoFrameAnalyzer\VideoFrameAnalyzer.csproj", "{BEC7DA78-C953-4A72-924F-2749D1F9F18B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicConsoleSample", "BasicConsoleSample\BasicConsoleSample.csproj", "{0638DEF8-9613-4599-9335-7A2438B447DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5B40977E-E8FA-41BC-8F0A-6D6FDE237571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B40977E-E8FA-41BC-8F0A-6D6FDE237571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B40977E-E8FA-41BC-8F0A-6D6FDE237571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B40977E-E8FA-41BC-8F0A-6D6FDE237571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEC7DA78-C953-4A72-924F-2749D1F9F18B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC7DA78-C953-4A72-924F-2749D1F9F18B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEC7DA78-C953-4A72-924F-2749D1F9F18B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC7DA78-C953-4A72-924F-2749D1F9F18B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0638DEF8-9613-4599-9335-7A2438B447DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0638DEF8-9613-4599-9335-7A2438B447DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0638DEF8-9613-4599-9335-7A2438B447DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0638DEF8-9613-4599-9335-7A2438B447DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
