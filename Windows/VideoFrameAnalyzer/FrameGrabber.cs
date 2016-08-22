@@ -128,8 +128,8 @@ namespace VideoFrameAnalyzer
         protected Predicate<VideoFrame> _analysisPredicate = null;
         protected VideoCapture _reader = null;
         protected Timer _timer = null;
-        protected readonly SemaphoreSlim _timerMutex = new SemaphoreSlim(1);
-        protected readonly AutoResetEvent _frameGrabTimer = new AutoResetEvent(false);
+        protected SemaphoreSlim _timerMutex = new SemaphoreSlim(1);
+        protected AutoResetEvent _frameGrabTimer = new AutoResetEvent(false);
         protected bool _stopping = false;
         protected Task _producerTask = null;
         protected Task _consumerTask = null;
