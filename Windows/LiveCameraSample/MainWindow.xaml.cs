@@ -206,7 +206,14 @@ namespace LiveCameraSample
 
             // See if we have local face detections for this image.
             var localFaces = (OpenCvSharp.Rect[])frame.UserData;
-            if (localFaces != null)
+            if (localFaces == null)
+            {
+                // If localFaces is null, we're not performing local face detection.
+                // Use Cognigitve Services to do the face detection.
+                Properties.Settings.Default.EmotionAPICallCount++;
+                emotions = await _emotionClient.RecognizeAsync(jpg);
+            }
+            else if (localFaces.Count() > 0)
             {
                 // If we have local face detections, we can call the API with them. 
                 // First, convert the OpenCvSharp rectangles. 
@@ -218,16 +225,15 @@ namespace LiveCameraSample
                         Width = f.Width,
                         Height = f.Height
                     });
+                Properties.Settings.Default.EmotionAPICallCount++;
                 emotions = await _emotionClient.RecognizeAsync(jpg, rects.ToArray());
             }
             else
             {
-                // If not, the API will do the face detection. 
-                emotions = await _emotionClient.RecognizeAsync(jpg);
+                // Local face detection found no faces; don't call Cognitive Services.
+                emotions = new Emotion[0];
             }
 
-            // Count the API call. 
-            Properties.Settings.Default.EmotionAPICallCount++;
             // Output. 
             return new LiveCameraResult
             {
