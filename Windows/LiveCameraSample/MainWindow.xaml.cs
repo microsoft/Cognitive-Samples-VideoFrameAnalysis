@@ -208,9 +208,9 @@ namespace LiveCameraSample
             var localFaces = (OpenCvSharp.Rect[])frame.UserData;
             if (localFaces == null)
             {
-                Properties.Settings.Default.EmotionAPICallCount++;
                 // If localFaces is null, we're not performing local face detection.
                 // Use Cognigitve Services to do the face detection.
+                Properties.Settings.Default.EmotionAPICallCount++;
                 emotions = await _emotionClient.RecognizeAsync(jpg);
             }
             else if (localFaces.Count() > 0)
