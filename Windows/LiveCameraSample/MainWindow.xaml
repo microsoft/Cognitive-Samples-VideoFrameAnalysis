@@ -55,7 +55,7 @@
                     <TextBox   Margin="5" Grid.Row="3" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.EmotionAPIHost, Mode=TwoWay}" />
                     <TextBlock Margin="5" Grid.Row="4" Grid.Column="0" Text="Vision API Key:" />
                     <TextBox   Margin="5" Grid.Row="4" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.VisionAPIKey, Mode=TwoWay}" />
-                    <TextBlock Margin="5" Grid.Row="5" Grid.Column="0" Text="Vision Host Host:" />
+                    <TextBlock Margin="5" Grid.Row="5" Grid.Column="0" Text="Vision API Host:" />
                     <TextBox   Margin="5" Grid.Row="5" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.VisionAPIHost, Mode=TwoWay}" />
                     <TextBlock Margin="5" Grid.Row="6" Grid.ColumnSpan="2" TextWrapping="Wrap"><Run Text="Get API keys at "/><Hyperlink NavigateUri="http://www.microsoft.com/cognitive" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="microsoft.com/cognitive"/></Hyperlink></TextBlock>
                     <TextBlock Margin="5" Grid.Row="7" Grid.Column="0" Text="API Call Interval:" />
