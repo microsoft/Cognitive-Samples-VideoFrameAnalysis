@@ -31,29 +31,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Diagnostics;
-using Newtonsoft.Json;
-using OpenCvSharp;
-using OpenCvSharp.Extensions;
 using Microsoft.ProjectOxford.Emotion;
 using Microsoft.ProjectOxford.Emotion.Contract;
 using Microsoft.ProjectOxford.Face;
 using Microsoft.ProjectOxford.Face.Contract;
 using Microsoft.ProjectOxford.Vision;
+using Newtonsoft.Json;
+using OpenCvSharp;
+using OpenCvSharp.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using VideoFrameAnalyzer;
 
 namespace LiveCameraSample
@@ -386,9 +380,9 @@ namespace LiveCameraSample
             Properties.Settings.Default.VisionAPIKey = Properties.Settings.Default.VisionAPIKey.Trim();
 
             // Create API clients. 
-            _faceClient = new FaceServiceClient(Properties.Settings.Default.FaceAPIKey);
-            _emotionClient = new EmotionServiceClient(Properties.Settings.Default.EmotionAPIKey);
-            _visionClient = new VisionServiceClient(Properties.Settings.Default.VisionAPIKey);
+            _faceClient = new FaceServiceClient(Properties.Settings.Default.FaceAPIKey, Properties.Settings.Default.FaceAPIHost);
+            _emotionClient = new EmotionServiceClient(Properties.Settings.Default.EmotionAPIKey, Properties.Settings.Default.EmotionAPIHost);
+            _visionClient = new VisionServiceClient(Properties.Settings.Default.VisionAPIKey, Properties.Settings.Default.VisionAPIHost);
 
             // How often to analyze. 
             _grabber.TriggerAnalysisOnInterval(Properties.Settings.Default.AnalysisInterval);

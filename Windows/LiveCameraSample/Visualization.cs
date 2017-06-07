@@ -40,6 +40,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.ProjectOxford.Common.Contract;
 using Microsoft.ProjectOxford.Emotion.Contract;
 using Microsoft.ProjectOxford.Face.Contract;
 using Microsoft.ProjectOxford.Vision.Contract;
@@ -91,7 +92,7 @@ namespace LiveCameraSample
                         42 * annotationScale, Brushes.Black);
                     // Instead of calling DrawText (which can only draw the text in a solid colour), we
                     // convert to geometry and use DrawGeometry, which allows us to add an outline. 
-                    var geom = ft.BuildGeometry(new Point(10 * annotationScale, y));
+                    var geom = ft.BuildGeometry(new System.Windows.Point(10 * annotationScale, y));
                     drawingContext.DrawGeometry(s_lineBrush, new Pen(Brushes.Black, 2 * annotationScale), geom);
                     // Move line down
                     y += 42 * annotationScale;
@@ -101,7 +102,7 @@ namespace LiveCameraSample
             return DrawOverlay(baseImage, drawAction);
         }
 
-        public static BitmapSource DrawFaces(BitmapSource baseImage, Microsoft.ProjectOxford.Face.Contract.Face[] faces, Scores[] emotionScores, string[] celebName)
+        public static BitmapSource DrawFaces(BitmapSource baseImage, Microsoft.ProjectOxford.Face.Contract.Face[] faces, EmotionScores[] emotionScores, string[] celebName)
         {
             if (faces == null)
             {
@@ -154,7 +155,7 @@ namespace LiveCameraSample
 
                         var ypad = pad;
                         var xpad = pad + 4 * annotationScale;
-                        var origin = new Point(
+                        var origin = new System.Windows.Point(
                             faceRect.Left + xpad - lineThickness / 2,
                             faceRect.Top - ft.Height - ypad + lineThickness / 2);
                         var rect = ft.BuildHighlightGeometry(origin).GetRenderBounds(null);
