@@ -32,5 +32,14 @@
     <Setting Name="AutoStopTime" Type="System.TimeSpan" Scope="Application">
       <Value Profile="(Default)">00:05:00</Value>
     </Setting>
+    <Setting Name="FaceAPIHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://westus.api.cognitive.microsoft.com/face/v1.0</Value>
+    </Setting>
+    <Setting Name="EmotionAPIHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://westus.api.cognitive.microsoft.com/emotion/v1.0</Value>
+    </Setting>
+    <Setting Name="VisionAPIHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://westus.api.cognitive.microsoft.com/vision/v1.0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

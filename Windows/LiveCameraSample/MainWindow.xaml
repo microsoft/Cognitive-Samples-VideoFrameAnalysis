@@ -41,17 +41,26 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Text="Face API Key:" />
                     <TextBox   Margin="5" Grid.Row="0" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.FaceAPIKey, Mode=TwoWay}" />
-                    <TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Text="Emotion API Key:" />
-                    <TextBox   Margin="5" Grid.Row="1" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.EmotionAPIKey, Mode=TwoWay}" />
-                    <TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Text="Vision API Key:" />
-                    <TextBox   Margin="5" Grid.Row="2" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.VisionAPIKey, Mode=TwoWay}" />
-                    <TextBlock Margin="5" Grid.Row="3" Grid.ColumnSpan="2" TextWrapping="Wrap"><Run Text="Get API keys at "/><Hyperlink NavigateUri="http://www.microsoft.com/cognitive" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="microsoft.com/cognitive"/></Hyperlink></TextBlock>
-                    <TextBlock Margin="5" Grid.Row="4" Grid.Column="0" Text="API Call Interval:" />
-                    <TextBox   Margin="5" Grid.Row="4" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.AnalysisInterval, Mode=TwoWay}" />
-                    <TextBlock Margin="5" Grid.Row="5" Grid.ColumnSpan="2" TextWrapping="Wrap"><Run FontWeight="Bold" Text="Caution"/><Run Text=": Each video frame submitted to an API will count towards your transaction limit."/></TextBlock>
+                    <TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Text="Face API Host:" />
+                    <TextBox   Margin="5" Grid.Row="1" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.FaceAPIHost, Mode=TwoWay}" />
+                    <TextBlock Margin="5" Grid.Row="2" Grid.Column="0" Text="Emotion API Key:" />
+                    <TextBox   Margin="5" Grid.Row="2" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.EmotionAPIKey, Mode=TwoWay}" />
+                    <TextBlock Margin="5" Grid.Row="3" Grid.Column="0" Text="Emotion API Host:" />
+                    <TextBox   Margin="5" Grid.Row="3" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.EmotionAPIHost, Mode=TwoWay}" />
+                    <TextBlock Margin="5" Grid.Row="4" Grid.Column="0" Text="Vision API Key:" />
+                    <TextBox   Margin="5" Grid.Row="4" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.VisionAPIKey, Mode=TwoWay}" />
+                    <TextBlock Margin="5" Grid.Row="5" Grid.Column="0" Text="Vision API Host:" />
+                    <TextBox   Margin="5" Grid.Row="5" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.VisionAPIHost, Mode=TwoWay}" />
+                    <TextBlock Margin="5" Grid.Row="6" Grid.ColumnSpan="2" TextWrapping="Wrap"><Run Text="Get API keys at "/><Hyperlink NavigateUri="http://www.microsoft.com/cognitive" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="microsoft.com/cognitive"/></Hyperlink></TextBlock>
+                    <TextBlock Margin="5" Grid.Row="7" Grid.Column="0" Text="API Call Interval:" />
+                    <TextBox   Margin="5" Grid.Row="7" Grid.Column="1" Text="{Binding Source={StaticResource Settings}, Path=Default.AnalysisInterval, Mode=TwoWay}" />
+                    <TextBlock Margin="5" Grid.Row="8" Grid.ColumnSpan="2" TextWrapping="Wrap"><Run FontWeight="Bold" Text="Caution"/><Run Text=": Each video frame submitted to an API will count towards your transaction limit."/></TextBlock>
                 </Grid>
                 <TextBlock Margin="5,0,5,5">
                     <Run Text="Face API calls made = "/><Run Text="{Binding Source={StaticResource Settings}, Path=Default.FaceAPICallCount}"/><LineBreak />

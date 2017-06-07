@@ -31,34 +31,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
+using Microsoft.ProjectOxford.Emotion.Contract;
+using System.Linq;
+using Microsoft.ProjectOxford.Face.Contract;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.ProjectOxford.Emotion.Contract;
-using Microsoft.ProjectOxford.Face.Contract;
 
 namespace LiveCameraSample
 {
     internal class Aggregation
     {
-        public static Tuple<string, float> GetDominantEmotion(Scores scores)
+        public static Tuple<string, float> GetDominantEmotion(Microsoft.ProjectOxford.Common.Contract.EmotionScores scores)
         {
-            float maxScore = 0;
-            string dominant = "";
-            if (scores.Anger > maxScore) { maxScore = scores.Anger; dominant = "Anger"; }
-            if (scores.Contempt > maxScore) { maxScore = scores.Contempt; dominant = "Contempt"; }
-            if (scores.Disgust > maxScore) { maxScore = scores.Disgust; dominant = "Disgust"; }
-            if (scores.Fear > maxScore) { maxScore = scores.Fear; dominant = "Fear"; }
-            if (scores.Happiness > maxScore) { maxScore = scores.Happiness; dominant = "Happiness"; }
-            if (scores.Neutral > maxScore) { maxScore = scores.Neutral; dominant = "Neutral"; }
-            if (scores.Sadness > maxScore) { maxScore = scores.Sadness; dominant = "Sadness"; }
-            if (scores.Surprise > maxScore) { maxScore = scores.Surprise; dominant = "Surprise"; }
-            return new Tuple<string, float>(dominant, maxScore);
+            return scores.ToRankedList().Select(kv => new Tuple<string, float>(kv.Key, kv.Value)).First();
         }
 
-        public static string SummarizeEmotion(Scores scores)
+        public static string SummarizeEmotion(Microsoft.ProjectOxford.Common.Contract.EmotionScores scores)
         {
             var bestEmotion = Aggregation.GetDominantEmotion(scores);
             return string.Format("{0}: {1:N1}", bestEmotion.Item1, bestEmotion.Item2);
