@@ -25,7 +25,7 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("7fe54febeb0d4d62a39682168c141d70")]
         public string FaceAPIKey {
             get {
                 return ((string)(this["FaceAPIKey"]));
@@ -37,7 +37,7 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("04a0350643fc4c568c0130b34b91628d")]
         public string EmotionAPIKey {
             get {
                 return ((string)(this["EmotionAPIKey"]));
@@ -49,7 +49,7 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3f38208a862949b99a0c79dd589a07c0")]
         public string VisionAPIKey {
             get {
                 return ((string)(this["VisionAPIKey"]));

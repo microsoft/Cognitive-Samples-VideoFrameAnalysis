@@ -39,6 +39,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dragablz, Version=0.0.3.190, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dragablz.0.0.3.190\lib\net45\Dragablz.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Feenics.Keep.WebApi.EventSubscriberWrapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Feenics.Keep.WebApi.EventSubscriberWrapper.1.0.828\lib\net46\Feenics.Keep.WebApi.EventSubscriberWrapper.dll</HintPath>
       <Private>True</Private>
