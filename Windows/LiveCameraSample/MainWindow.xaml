@@ -14,11 +14,29 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="KnightWatch Inc" Height="550" Width="725">
+        Title="KnightWatch Inc. Integration and Machine Learning Interface" Height="550" Width="725">
     <dragablz:TabablzControl>
         <dragablz:TabablzControl.InterTabController>
             <dragablz:InterTabController />
         </dragablz:TabablzControl.InterTabController>
+        <TabItem Header="Avigilon Integration">
+            <StackPanel>
+                <TextBlock Margin="10" Text="UserName:" />
+                <TextBox   Margin="10" />
+                <TextBlock Margin="10" Text="Password:" />
+                <TextBox   Margin="10" />
+                <Button>Submit</Button>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="AccessXpert Integration">
+            <StackPanel>
+                <TextBlock Margin="10" Text="UserName:" />
+                <TextBox   Margin="10" />
+                <TextBlock Margin="10" Text="Password:" />
+                <TextBox   Margin="10" />
+                <Button>Submit</Button>
+            </StackPanel>
+        </TabItem>
         <TabItem Header="Machine Learning">
             <Grid>
                 <Grid.RowDefinitions>
@@ -87,12 +105,6 @@
                 </Grid>
                 <TextBlock Name="MessageArea" Margin="5" Grid.Row="2" VerticalAlignment="Center" />
             </Grid>
-        </TabItem>
-        <TabItem Header="Avigilon Integration">
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Material Design</TextBlock>
-        </TabItem>
-        <TabItem Header="AccessControl">
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Looks Quite Nice</TextBlock>
         </TabItem>
     </dragablz:TabablzControl>
    
