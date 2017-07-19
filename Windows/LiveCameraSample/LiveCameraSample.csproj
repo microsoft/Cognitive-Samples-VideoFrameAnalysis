@@ -39,6 +39,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AvigilonSdkDotNet, Version=6.0.2.6, Culture=neutral, PublicKeyToken=2d12209efd9d6b3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\Avigilon\Avigilon Control Center SDK\SDK\AvigilonSdkDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="Dragablz, Version=0.0.3.190, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dragablz.0.0.3.190\lib\net45\Dragablz.dll</HintPath>
       <Private>True</Private>
@@ -181,6 +185,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Aggregation.cs" />
+    <Compile Include="AvigilonLibrary.cs" />
     <Compile Include="CelebritiesResult.cs" />
     <Compile Include="LiveCameraResult.cs" />
     <Compile Include="Settings.cs" />

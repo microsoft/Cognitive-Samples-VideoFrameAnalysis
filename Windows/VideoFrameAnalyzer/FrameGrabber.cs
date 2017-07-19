@@ -171,6 +171,7 @@ namespace VideoFrameAnalyzer
 
             _reader = new VideoCapture(cameraIndex);
 
+           
             _fps = overrideFPS;
 
             if (_fps == 0)
