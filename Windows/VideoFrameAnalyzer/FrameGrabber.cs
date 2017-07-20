@@ -44,6 +44,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenCvSharp;
+using System.Net;
+using VideoFrameAnalyzer;
 
 namespace VideoFrameAnalyzer
 {
@@ -167,11 +169,17 @@ namespace VideoFrameAnalyzer
                 return;
             }
 
+            //do avigilon stuff..
+            
+           
             await StopProcessingAsync().ConfigureAwait(false);
 
-            _reader = new VideoCapture(cameraIndex);
+            //_reader = new VideoCapture(cameraIndex);
 
-           
+            AvigilonLibrary.IniializeAvigilonSDK();
+            AvigilonLibrary.LogintoNVRs();
+            bool resultofcameraid = AvigilonLibrary.GetCamerabyLogicalId();
+            AvigilonLibrary.m_streamcallback.StreamPassThroughModeEnabled = true;
             _fps = overrideFPS;
 
             if (_fps == 0)
@@ -179,8 +187,8 @@ namespace VideoFrameAnalyzer
                 _fps = 30;
             }
 
-            Width = _reader.FrameWidth;
-            Height = _reader.FrameHeight;
+            //Width = _reader.FrameWidth;
+            //Height = _reader.FrameHeight;
 
             StartProcessing(TimeSpan.FromSeconds(1 / _fps), () => DateTime.Now);
 
@@ -217,9 +225,32 @@ namespace VideoFrameAnalyzer
 
                     // Grab single frame. 
                     var timestamp = timestampFn();
-                    //string filename = "@C:/Users/awolf.KWI/Desktop/Profile.jpg";
-                    Mat image = new Mat(@"..\..\Data\Profile.jpg", ImreadModes.Color);
+                    //string filename = "@C:/Users/awolf.KWI/Desktop/sample.jpg";
+                    ////string localFilename = @"c:\localpath\tofile.jpg";
+                    //using (WebClient client = new WebClient())
+                    //{
+                    //    client.Headers.Set("username", "administrator");
+                    //    client.Headers.Set("password", "");
+                    //    client.DownloadFile("http://172.21.1.54/media/cam0/still.jpg?res=max", filename);
+                    //}
+                    // Mat image = new Mat(@"..\..\Data\Profile.jpg", ImreadModes.Color);
                     //bool success = _reader.Read(image);
+                    //IAsyncResult ar = AvigilonLibrary.m_streamcallback.BeginGetFrame(new TimeSpan(0, 0, 0, -1), null, null);
+                    //AvigilonDotNet.IFrame frame = AvigilonLibrary.m_streamcallback.EndGetFrame(ar);
+                    Mat image = null; 
+                    IAsyncResult ar = AvigilonLibrary.m_streamcallback.BeginGetFrame(new TimeSpan(0, 0, 0, 5), null, null);
+                    if (ar != null)
+                    {
+                        // Poll for completion information.
+                        while (!ar.IsCompleted)
+                        {
+                            System.Threading.Thread.Sleep(10);
+                        }
+                        AvigilonDotNet.IFrame frame = AvigilonLibrary.m_streamcallback.EndGetFrame(ar);
+                        image = Mat.FromImageData(frame.GetAsArray());
+                    }
+                    
+                   
                     bool success = true;
                     LogMessage("Producer: frame-grab took {0} ms", (DateTime.Now - startTime).Milliseconds);
 

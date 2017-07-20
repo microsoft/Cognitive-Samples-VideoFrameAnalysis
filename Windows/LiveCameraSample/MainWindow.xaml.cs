@@ -57,7 +57,7 @@ namespace LiveCameraSample
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        private AvigilonLibrary _avigilonLibrary;
+        
         private EmotionServiceClient _emotionClient = null;
         private FaceServiceClient _faceClient = null;
         private VisionServiceClient _visionClient = null;
@@ -375,16 +375,6 @@ namespace LiveCameraSample
                 return;
             }
 
-            _avigilonLibrary = new AvigilonLibrary();
-
-
-            _avigilonLibrary.IniializeAvigilonSDK();
-            _avigilonLibrary.LogintoNVRs();
-            if (_avigilonLibrary.GetCamerabyLogicalId())
-            {
-                MessageArea.Text = "loggin into Avigilon and camera fetch successful";
-
-            }
             
             // Clean leading/trailing spaces in API keys. 
             Properties.Settings.Default.FaceAPIKey = Properties.Settings.Default.FaceAPIKey.Trim();

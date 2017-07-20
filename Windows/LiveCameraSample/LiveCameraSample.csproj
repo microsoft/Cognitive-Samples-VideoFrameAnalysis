@@ -185,7 +185,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Aggregation.cs" />
-    <Compile Include="AvigilonLibrary.cs" />
     <Compile Include="CelebritiesResult.cs" />
     <Compile Include="LiveCameraResult.cs" />
     <Compile Include="Settings.cs" />

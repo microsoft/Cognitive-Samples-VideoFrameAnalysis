@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LiveCameraSample
+namespace VideoFrameAnalyzer
 {
     class AvigilonLibrary
     {
 
-        public bool GetCamerabyLogicalId()
+        public static bool GetCamerabyLogicalId()
         {
             // Try to get our device, give a few seconds because it may take awhile
             // for the device info to come in from the NVR
@@ -50,17 +50,24 @@ namespace LiveCameraSample
 
             if (m_streamGroup != null)
             {
-                m_controlCenter.CreateStreamWindow(camera, m_streamGroup, out m_streamWindow);
+                m_controlCenter.CreateStreamCallback(camera, m_streamGroup, AvigilonDotNet.MediaCoding.Jpeg, out m_streamcallback);
+            }
+            else
+            {
+                Console.WriteLine("stream group is NULL");
             }
 
-            if (m_streamWindow != null)
+            if (m_streamcallback != null)
             {
+                m_streamcallback.Enable = true;
                 return true;
             }
+
+
             return false;
         }
 
-        public bool LogintoNVRs()
+        public static bool LogintoNVRs()
         {
             System.Net.IPAddress address;
             if (System.Net.IPAddress.TryParse("127.0.0.1", out address))
@@ -104,7 +111,7 @@ namespace LiveCameraSample
             return true;
         }
 
-        public bool IniializeAvigilonSDK()
+        public static bool IniializeAvigilonSDK()
         {
             // Create and initialize the control center SDK.
             AvigilonDotNet.SdkInitParams initParams = new AvigilonDotNet.SdkInitParams(
@@ -124,22 +131,24 @@ namespace LiveCameraSample
             System.Console.WriteLine("Avigilon SDK initialized");
             return true;
         }
-        public System.Net.IPEndPoint m_endPoint;
-        public System.Net.IPAddress m_address;
-        public bool m_camSpecifiedLogical = true;
-        public System.UInt32 m_cameraLogicalId = 120891;
-        public System.String m_cameraDeviceId = "";
-        public string m_userName = "administrator";
-        public string m_password = "";
-        public AvigilonDotNet.AvigilonSdk m_sdk = null;
-        public AvigilonDotNet.IAvigilonControlCenter m_controlCenter = null;
-        public AvigilonDotNet.IEntityCamera m_camera = null;
-        public AvigilonDotNet.IStreamWindow m_streamWindow = null;
-        public AvigilonDotNet.IStreamGroup m_streamGroup = null;
-        public AvigilonDotNet.IAlarm m_alarm = null;
-        public AvigilonDotNet.INvr nvr = null;
-        public const int k_nvrConnectWait = 10; // (seconds)
-        public int k_cameraInfoWait = 10; // (seconds)
-        public AvigilonDotNet.IRequestor m_irequestor;
+        public static System.Net.IPAddress m_address;
+        public static bool m_camSpecifiedLogical = true;
+        public static System.UInt32 m_cameraLogicalId = 1208;
+        public static System.String m_cameraDeviceId = "";
+        public static System.Net.IPEndPoint m_endPoint;
+        public static string m_userName = "administrator";
+        public static string m_password = "";
+        public static AvigilonDotNet.AvigilonSdk m_sdk = null;
+        public static AvigilonDotNet.IAvigilonControlCenter m_controlCenter = null;
+        public static AvigilonDotNet.IEntityCamera m_camera = null;
+        public static AvigilonDotNet.IStreamWindow m_streamWindow = null;
+        public static AvigilonDotNet.IStreamGroup m_streamGroup = null;
+        public static AvigilonDotNet.IAlarm m_alarm = null;
+        public static AvigilonDotNet.INvr nvr = null;
+        public static AvigilonDotNet.IStream m_stream = null;
+        public static AvigilonDotNet.IStreamCallback m_streamcallback = null;
+        public  const int k_nvrConnectWait = 10; // (seconds)
+        public static int k_cameraInfoWait = 10; // (seconds)
+        public static AvigilonDotNet.IRequestor m_irequestor;
     }
 }
