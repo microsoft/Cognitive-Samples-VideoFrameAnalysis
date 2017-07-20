@@ -235,6 +235,7 @@
     <Content Include="Data\haarcascade_frontalface_alt2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Data\Profile.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VideoFrameAnalyzer\VideoFrameAnalyzer.csproj">

@@ -217,9 +217,10 @@ namespace VideoFrameAnalyzer
 
                     // Grab single frame. 
                     var timestamp = timestampFn();
-                    Mat image = new Mat();
-                    bool success = _reader.Read(image);
-
+                    //string filename = "@C:/Users/awolf.KWI/Desktop/Profile.jpg";
+                    Mat image = new Mat(@"..\..\Data\Profile.jpg", ImreadModes.Color);
+                    //bool success = _reader.Read(image);
+                    bool success = true;
                     LogMessage("Producer: frame-grab took {0} ms", (DateTime.Now - startTime).Milliseconds);
 
                     if (!success)
