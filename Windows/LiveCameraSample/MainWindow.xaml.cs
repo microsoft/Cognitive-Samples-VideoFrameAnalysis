@@ -57,6 +57,7 @@ namespace LiveCameraSample
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
+        
         private EmotionServiceClient _emotionClient = null;
         private FaceServiceClient _faceClient = null;
         private VisionServiceClient _visionClient = null;
@@ -374,6 +375,7 @@ namespace LiveCameraSample
                 return;
             }
 
+            
             // Clean leading/trailing spaces in API keys. 
             Properties.Settings.Default.FaceAPIKey = Properties.Settings.Default.FaceAPIKey.Trim();
             Properties.Settings.Default.EmotionAPIKey = Properties.Settings.Default.EmotionAPIKey.Trim();

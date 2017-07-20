@@ -3,13 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="FaceAPIKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">7fe54febeb0d4d62a39682168c141d70</Value>
     </Setting>
     <Setting Name="EmotionAPIKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">04a0350643fc4c568c0130b34b91628d</Value>
     </Setting>
     <Setting Name="VisionAPIKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">3f38208a862949b99a0c79dd589a07c0</Value>
     </Setting>
     <Setting Name="SettingsPanelVisibility" Type="System.Windows.Visibility" Scope="User">
       <Value Profile="(Default)">Visible</Value>
