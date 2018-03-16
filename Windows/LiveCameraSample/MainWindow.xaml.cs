@@ -31,14 +31,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
-using Microsoft.ProjectOxford.Emotion;
-using Microsoft.ProjectOxford.Emotion.Contract;
-using Microsoft.ProjectOxford.Face;
-using Microsoft.ProjectOxford.Face.Contract;
-using Microsoft.ProjectOxford.Vision;
-using Newtonsoft.Json;
-using OpenCvSharp;
-using OpenCvSharp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,7 +40,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using Newtonsoft.Json;
+using OpenCvSharp;
+using OpenCvSharp.Extensions;
 using VideoFrameAnalyzer;
+using Common = Microsoft.ProjectOxford.Common;
+using FaceAPI = Microsoft.ProjectOxford.Face;
+using VisionAPI = Microsoft.ProjectOxford.Vision;
 
 namespace LiveCameraSample
 {
@@ -57,9 +55,8 @@ namespace LiveCameraSample
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        private EmotionServiceClient _emotionClient = null;
-        private FaceServiceClient _faceClient = null;
-        private VisionServiceClient _visionClient = null;
+        private FaceAPI.FaceServiceClient _faceClient = null;
+        private VisionAPI.VisionServiceClient _visionClient = null;
         private readonly FrameGrabber<LiveCameraResult> _grabber = null;
         private static readonly ImageEncodingParam[] s_jpegParams = {
             new ImageEncodingParam(ImwriteFlags.JpegQuality, 60)
@@ -132,9 +129,9 @@ namespace LiveCameraSample
                     {
                         string apiName = "";
                         string message = e.Exception.Message;
-                        var faceEx = e.Exception as FaceAPIException;
-                        var emotionEx = e.Exception as Microsoft.ProjectOxford.Common.ClientException;
-                        var visionEx = e.Exception as Microsoft.ProjectOxford.Vision.ClientException;
+                        var faceEx = e.Exception as FaceAPI.FaceAPIException;
+                        var emotionEx = e.Exception as Common.ClientException;
+                        var visionEx = e.Exception as VisionAPI.ClientException;
                         if (faceEx != null)
                         {
                             apiName = "Face";
@@ -178,8 +175,11 @@ namespace LiveCameraSample
             // Encode image. 
             var jpg = frame.Image.ToMemoryStream(".jpg", s_jpegParams);
             // Submit image to API. 
-            var attrs = new List<FaceAttributeType> { FaceAttributeType.Age,
-                FaceAttributeType.Gender, FaceAttributeType.HeadPose };
+            var attrs = new List<FaceAPI.FaceAttributeType> {
+                FaceAPI.FaceAttributeType.Age,
+                FaceAPI.FaceAttributeType.Gender,
+                FaceAPI.FaceAttributeType.HeadPose
+            };
             var faces = await _faceClient.DetectAsync(jpg, returnFaceAttributes: attrs);
             // Count the API call. 
             Properties.Settings.Default.FaceAPICallCount++;
@@ -196,44 +196,33 @@ namespace LiveCameraSample
             // Encode image. 
             var jpg = frame.Image.ToMemoryStream(".jpg", s_jpegParams);
             // Submit image to API. 
-            Emotion[] emotions = null;
+            FaceAPI.Contract.Face[] faces = null;
 
             // See if we have local face detections for this image.
             var localFaces = (OpenCvSharp.Rect[])frame.UserData;
-            if (localFaces == null)
+            if (localFaces == null || localFaces.Count() > 0)
             {
                 // If localFaces is null, we're not performing local face detection.
                 // Use Cognigitve Services to do the face detection.
-                Properties.Settings.Default.EmotionAPICallCount++;
-                emotions = await _emotionClient.RecognizeAsync(jpg);
-            }
-            else if (localFaces.Count() > 0)
-            {
-                // If we have local face detections, we can call the API with them. 
-                // First, convert the OpenCvSharp rectangles. 
-                var rects = localFaces.Select(
-                    f => new Microsoft.ProjectOxford.Common.Rectangle
-                    {
-                        Left = f.Left,
-                        Top = f.Top,
-                        Width = f.Width,
-                        Height = f.Height
-                    });
-                Properties.Settings.Default.EmotionAPICallCount++;
-                emotions = await _emotionClient.RecognizeAsync(jpg, rects.ToArray());
+                Properties.Settings.Default.FaceAPICallCount++;
+                faces = await _faceClient.DetectAsync(
+                    jpg,
+                    /* returnFaceId= */ false,
+                    /* returnFaceLandmarks= */ false,
+                    new FaceAPI.FaceAttributeType[1] { FaceAPI.FaceAttributeType.Emotion });
             }
             else
             {
                 // Local face detection found no faces; don't call Cognitive Services.
-                emotions = new Emotion[0];
+                faces = new FaceAPI.Contract.Face[0];
             }
 
             // Output. 
             return new LiveCameraResult
             {
-                Faces = emotions.Select(e => CreateFace(e.FaceRectangle)).ToArray(),
+                Faces = faces.Select(e => CreateFace(e.FaceRectangle)).ToArray(),
                 // Extract emotion scores from results. 
-                EmotionScores = emotions.Select(e => e.Scores).ToArray()
+                EmotionScores = faces.Select(e => e.FaceAttributes.Emotion).ToArray()
             };
         }
 
@@ -376,13 +365,11 @@ namespace LiveCameraSample
 
             // Clean leading/trailing spaces in API keys. 
             Properties.Settings.Default.FaceAPIKey = Properties.Settings.Default.FaceAPIKey.Trim();
-            Properties.Settings.Default.EmotionAPIKey = Properties.Settings.Default.EmotionAPIKey.Trim();
             Properties.Settings.Default.VisionAPIKey = Properties.Settings.Default.VisionAPIKey.Trim();
 
             // Create API clients. 
-            _faceClient = new FaceServiceClient(Properties.Settings.Default.FaceAPIKey, Properties.Settings.Default.FaceAPIHost);
-            _emotionClient = new EmotionServiceClient(Properties.Settings.Default.EmotionAPIKey, Properties.Settings.Default.EmotionAPIHost);
-            _visionClient = new VisionServiceClient(Properties.Settings.Default.VisionAPIKey, Properties.Settings.Default.VisionAPIHost);
+            _faceClient = new FaceAPI.FaceServiceClient(Properties.Settings.Default.FaceAPIKey, Properties.Settings.Default.FaceAPIHost);
+            _visionClient = new VisionAPI.VisionServiceClient(Properties.Settings.Default.VisionAPIKey, Properties.Settings.Default.VisionAPIHost);
 
             // How often to analyze. 
             _grabber.TriggerAnalysisOnInterval(Properties.Settings.Default.AnalysisInterval);
@@ -418,11 +405,11 @@ namespace LiveCameraSample
             e.Handled = true;
         }
 
-        private Face CreateFace(FaceRectangle rect)
+        private FaceAPI.Contract.Face CreateFace(FaceAPI.Contract.FaceRectangle rect)
         {
-            return new Face
+            return new FaceAPI.Contract.Face
             {
-                FaceRectangle = new FaceRectangle
+                FaceRectangle = new FaceAPI.Contract.FaceRectangle
                 {
                     Left = rect.Left,
                     Top = rect.Top,
@@ -432,11 +419,11 @@ namespace LiveCameraSample
             };
         }
 
-        private Face CreateFace(Microsoft.ProjectOxford.Vision.Contract.FaceRectangle rect)
+        private FaceAPI.Contract.Face CreateFace(VisionAPI.Contract.FaceRectangle rect)
         {
-            return new Face
+            return new FaceAPI.Contract.Face
             {
-                FaceRectangle = new FaceRectangle
+                FaceRectangle = new FaceAPI.Contract.FaceRectangle
                 {
                     Left = rect.Left,
                     Top = rect.Top,
@@ -446,11 +433,11 @@ namespace LiveCameraSample
             };
         }
 
-        private Face CreateFace(Microsoft.ProjectOxford.Common.Rectangle rect)
+        private FaceAPI.Contract.Face CreateFace(Common.Rectangle rect)
         {
-            return new Face
+            return new FaceAPI.Contract.Face
             {
-                FaceRectangle = new FaceRectangle
+                FaceRectangle = new FaceAPI.Contract.FaceRectangle
                 {
                     Left = rect.Left,
                     Top = rect.Top,
@@ -460,7 +447,7 @@ namespace LiveCameraSample
             };
         }
 
-        private void MatchAndReplaceFaceRectangles(Face[] faces, OpenCvSharp.Rect[] clientRects)
+        private void MatchAndReplaceFaceRectangles(FaceAPI.Contract.Face[] faces, OpenCvSharp.Rect[] clientRects)
         {
             // Use a simple heuristic for matching the client-side faces to the faces in the
             // results. Just sort both lists left-to-right, and assume a 1:1 correspondence. 
@@ -482,7 +469,7 @@ namespace LiveCameraSample
             {
                 // convert from OpenCvSharp rectangles
                 OpenCvSharp.Rect r = sortedClientRects[i];
-                sortedResultFaces[i].FaceRectangle = new FaceRectangle { Left = r.Left, Top = r.Top, Width = r.Width, Height = r.Height };
+                sortedResultFaces[i].FaceRectangle = new FaceAPI.Contract.FaceRectangle { Left = r.Left, Top = r.Top, Width = r.Width, Height = r.Height };
             }
         }
     }

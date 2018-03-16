@@ -5,9 +5,6 @@
     <Setting Name="FaceAPIKey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="EmotionAPIKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="VisionAPIKey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -18,9 +15,6 @@
       <Value Profile="(Default)">00:00:03</Value>
     </Setting>
     <Setting Name="FaceAPICallCount" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="EmotionAPICallCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="VisionAPICallCount" Type="System.Int32" Scope="User">
@@ -34,9 +28,6 @@
     </Setting>
     <Setting Name="FaceAPIHost" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://westus.api.cognitive.microsoft.com/face/v1.0</Value>
-    </Setting>
-    <Setting Name="EmotionAPIHost" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://westus.api.cognitive.microsoft.com/emotion/v1.0</Value>
     </Setting>
     <Setting Name="VisionAPIHost" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://westus.api.cognitive.microsoft.com/vision/v1.0</Value>
