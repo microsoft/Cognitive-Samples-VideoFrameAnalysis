@@ -90,7 +90,7 @@ namespace VideoFrameAnalyzer
         /// <value> The analysis function. </value>
         /// <example> This example shows how to provide an analysis function using a lambda expression.
         ///     <code>
-        ///     var client = new EmotionServiceClient("subscription key");
+        ///     var client = new FaceServiceClient("subscription key", "api root");
         ///     var grabber = new FrameGrabber();
         ///     grabber.AnalysisFunction = async (frame) =&gt; { return await client.RecognizeAsync(frame.Image.ToMemoryStream(".jpg")); };
         ///     </code></example>

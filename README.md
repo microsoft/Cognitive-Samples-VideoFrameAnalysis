@@ -9,7 +9,6 @@ This sample contains a library, along with two applications, for analyzing video
 
 1. Get API keys for the Vision APIs from [microsoft.com/cognitive][Sign-Up]. For video frame analysis, the applicable APIs are:
     - [Computer Vision API][]
-    - [Emotion API][]
     - [Face API][]
 2. Open the sample in Visual Studio 2015, build and run the sample applications:
     - For BasicConsoleSample, the Face API key is hard-coded directly in [BasicConsoleSample/Program.cs](Windows/BasicConsoleSample/Program.cs).
@@ -18,7 +17,6 @@ This sample contains a library, along with two applications, for analyzing video
 
 [Sign-Up]:             https://www.microsoft.com/cognitive-services/en-us/sign-up
 [Computer Vision API]: https://www.microsoft.com/cognitive-services/en-us/computer-vision-api
-[Emotion API]:         https://www.microsoft.com/cognitive-services/en-us/emotion-api
 [Face API]:            https://www.microsoft.com/cognitive-services/en-us/face-api
 
 ## Using the VideoFrameAnalyzer Library
@@ -26,7 +24,7 @@ This sample contains a library, along with two applications, for analyzing video
 You can start using the library with only a few lines of code:
 ```csharp
 // Create Face API Client. 
-FaceServiceClient faceClient = new FaceServiceClient("<subscription key>");
+FaceServiceClient faceClient = new FaceServiceClient("<subscription key>","<api root>");
 // Create grabber, with analysis type Face[]. 
 FrameGrabber<Face[]> grabber = new FrameGrabber<Face[]>();
 // Set up Face API call, which returns a Face[]. Simply encodes image and submits to Face API. 

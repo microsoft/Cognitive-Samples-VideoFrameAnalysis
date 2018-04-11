@@ -31,9 +31,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
-using Microsoft.ProjectOxford.Emotion.Contract;
 using System.Linq;
 using Microsoft.ProjectOxford.Face.Contract;
+using Microsoft.ProjectOxford.Common.Contract;
 using System;
 using System.Collections.Generic;
 
@@ -41,12 +41,12 @@ namespace LiveCameraSample
 {
     internal class Aggregation
     {
-        public static Tuple<string, float> GetDominantEmotion(Microsoft.ProjectOxford.Common.Contract.EmotionScores scores)
+        public static Tuple<string, float> GetDominantEmotion(EmotionScores scores)
         {
             return scores.ToRankedList().Select(kv => new Tuple<string, float>(kv.Key, kv.Value)).First();
         }
 
-        public static string SummarizeEmotion(Microsoft.ProjectOxford.Common.Contract.EmotionScores scores)
+        public static string SummarizeEmotion(EmotionScores scores)
         {
             var bestEmotion = Aggregation.GetDominantEmotion(scores);
             return string.Format("{0}: {1:N1}", bestEmotion.Item1, bestEmotion.Item2);

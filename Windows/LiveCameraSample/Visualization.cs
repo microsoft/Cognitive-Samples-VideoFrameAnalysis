@@ -41,8 +41,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.ProjectOxford.Common.Contract;
-using Microsoft.ProjectOxford.Emotion.Contract;
-using Microsoft.ProjectOxford.Face.Contract;
+using FaceAPI = Microsoft.ProjectOxford.Face.Contract;
 using Microsoft.ProjectOxford.Vision.Contract;
 
 namespace LiveCameraSample
@@ -102,7 +101,7 @@ namespace LiveCameraSample
             return DrawOverlay(baseImage, drawAction);
         }
 
-        public static BitmapSource DrawFaces(BitmapSource baseImage, Microsoft.ProjectOxford.Face.Contract.Face[] faces, EmotionScores[] emotionScores, string[] celebName)
+        public static BitmapSource DrawFaces(BitmapSource baseImage, FaceAPI.Face[] faces, EmotionScores[] emotionScores, string[] celebName)
         {
             if (faces == null)
             {
