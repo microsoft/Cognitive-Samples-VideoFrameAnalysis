@@ -1,5 +1,7 @@
 # Video Frame Analysis Sample - JavaScript
 
+<p align="center"><img alt="" src="https://github.com/aaronchong888/Cognitive-Samples-VideoFrameAnalysis/blob/javascript-implementation/JavaScript/LiveCameraSample/screenshot.png" width="50%"></p>
+
 ## Description
 
 This sample demonstrates a simple HTML website with client side JavaScript codes for analyzing video frames from a webcam in near-real-time using Vision APIs from [Microsoft Cognitive Services][].
