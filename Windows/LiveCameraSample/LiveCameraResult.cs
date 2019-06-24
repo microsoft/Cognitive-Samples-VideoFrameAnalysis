@@ -31,14 +31,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
+using FaceAPI = Microsoft.Azure.CognitiveServices.Vision.Face.Models;
+using VisionAPI = Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+
 namespace LiveCameraSample
 {
     // Class to hold all possible result types. 
     public class LiveCameraResult
     {
-        public Microsoft.ProjectOxford.Face.Contract.Face[] Faces { get; set; } = null;
-        public Microsoft.ProjectOxford.Common.Contract.EmotionScores[] EmotionScores { get; set; } = null;
+        public FaceAPI.DetectedFace[] Faces { get; set; } = null;
         public string[] CelebrityNames { get; set; } = null;
-        public Microsoft.ProjectOxford.Vision.Contract.Tag[] Tags { get; set; } = null;
+        public VisionAPI.ImageTag[] Tags { get; set; } = null;
     }
 }

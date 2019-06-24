@@ -32,17 +32,13 @@
 // 
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Microsoft.ProjectOxford.Common.Contract;
-using FaceAPI = Microsoft.ProjectOxford.Face.Contract;
-using Microsoft.ProjectOxford.Vision.Contract;
+using FaceAPI = Microsoft.Azure.CognitiveServices.Vision.Face;
+using VisionAPI = Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 
 namespace LiveCameraSample
 {
@@ -73,7 +69,7 @@ namespace LiveCameraSample
             return outputBitmap;
         }
 
-        public static BitmapSource DrawTags(BitmapSource baseImage, Tag[] tags)
+        public static BitmapSource DrawTags(BitmapSource baseImage, VisionAPI.Models.ImageTag[] tags)
         {
             if (tags == null)
             {
@@ -101,7 +97,7 @@ namespace LiveCameraSample
             return DrawOverlay(baseImage, drawAction);
         }
 
-        public static BitmapSource DrawFaces(BitmapSource baseImage, FaceAPI.Face[] faces, EmotionScores[] emotionScores, string[] celebName)
+        public static BitmapSource DrawFaces(BitmapSource baseImage, FaceAPI.Models.DetectedFace[] faces, string[] celebName)
         {
             if (faces == null)
             {
@@ -118,21 +114,22 @@ namespace LiveCameraSample
                     Rect faceRect = new Rect(
                         face.FaceRectangle.Left, face.FaceRectangle.Top,
                         face.FaceRectangle.Width, face.FaceRectangle.Height);
-                    string text = "";
+
+                    var summary = new StringBuilder();
 
                     if (face.FaceAttributes != null)
                     {
-                        text += Aggregation.SummarizeFaceAttributes(face.FaceAttributes);
+                        summary.Append(Aggregation.SummarizeFaceAttributes(face.FaceAttributes));
                     }
 
-                    if (emotionScores?[i] != null)
+                    if (face.FaceAttributes.Emotion != null)
                     {
-                        text += Aggregation.SummarizeEmotion(emotionScores[i]);
+                        summary.Append(Aggregation.SummarizeEmotion(face.FaceAttributes.Emotion));
                     }
 
                     if (celebName?[i] != null)
                     {
-                        text += celebName[i];
+                        summary.Append(celebName[i]);
                     }
 
                     faceRect.Inflate(6 * annotationScale, 6 * annotationScale);
@@ -144,9 +141,9 @@ namespace LiveCameraSample
                         new Pen(s_lineBrush, lineThickness),
                         faceRect);
 
-                    if (text != "")
+                    if (summary.Length > 0)
                     {
-                        FormattedText ft = new FormattedText(text,
+                        FormattedText ft = new FormattedText(summary.ToString(),
                             CultureInfo.CurrentCulture, FlowDirection.LeftToRight, s_typeface,
                             16 * annotationScale, Brushes.Black);
 

@@ -1,15 +1,15 @@
-// 
+//
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
-// 
+//
 // Microsoft Cognitive Services: http://www.microsoft.com/cognitive
-// 
+//
 // Microsoft Cognitive Services Github:
 // https://github.com/Microsoft/Cognitive
-// 
+//
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
-// 
+//
 // MIT License:
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -18,10 +18,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,18 +29,14 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
+//
 
 // Uncomment this to enable the LogMessage function, which can with debugging timing issues.
 // #define TRACE_GRABBER
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenCvSharp;
@@ -50,7 +46,7 @@ namespace VideoFrameAnalyzer
     /// <summary> A frame grabber. </summary>
     /// <typeparam name="AnalysisResultType"> Type of the analysis result. This is the type that
     ///     the AnalysisFunction will return, when it calls some API on a video frame. </typeparam>
-    public class FrameGrabber<AnalysisResultType>
+    public class FrameGrabber<AnalysisResultType> : IDisposable
     {
         #region Types
 
@@ -138,6 +134,7 @@ namespace VideoFrameAnalyzer
         protected int _numCameras = -1;
         protected int _currCameraIdx = -1;
         protected double _fps = 0;
+        private bool disposedValue = false;
 
         #endregion Fields
 
@@ -161,7 +158,7 @@ namespace VideoFrameAnalyzer
         /// <returns> A Task. </returns>
         public async Task StartProcessingCameraAsync(int cameraIndex = 0, double overrideFPS = 0)
         {
-            // Check to see if we're re-opening the same camera. 
+            // Check to see if we're re-opening the same camera.
             if (_reader != null && _reader.CaptureType == CaptureType.Camera && cameraIndex == _currCameraIdx)
             {
                 return;
@@ -208,13 +205,13 @@ namespace VideoFrameAnalyzer
                 {
                     LogMessage("Producer: waiting for timer to trigger frame-grab");
 
-                    // Wait to get released by the timer. 
+                    // Wait to get released by the timer.
                     _frameGrabTimer.WaitOne();
                     LogMessage("Producer: grabbing frame...");
 
                     var startTime = DateTime.Now;
 
-                    // Grab single frame. 
+                    // Grab single frame.
                     var timestamp = timestampFn();
                     Mat image = new Mat();
                     bool success = _reader.Read(image);
@@ -223,19 +220,19 @@ namespace VideoFrameAnalyzer
 
                     if (!success)
                     {
-                        // If we've reached the end of the video, stop here. 
+                        // If we've reached the end of the video, stop here.
                         if (_reader.CaptureType == CaptureType.File)
                         {
                             LogMessage("Producer: null frame from video file, stop!");
                             // This will call StopProcessing on a new thread.
                             var stopTask = StopProcessingAsync();
                             // Break out of the loop to make sure we don't try grabbing more
-                            // frames. 
+                            // frames.
                             break;
                         }
                         else
                         {
-                            // If failed on live camera, try again. 
+                            // If failed on live camera, try again.
                             LogMessage("Producer: null frame from live camera, continue!");
                             continue;
                         }
@@ -276,11 +273,11 @@ namespace VideoFrameAnalyzer
                 LogMessage("Producer: stopping, destroy reader and timer");
                 _analysisTaskQueue.CompleteAdding();
 
-                // We reach this point by breaking out of the while loop. So we must be stopping. 
+                // We reach this point by breaking out of the while loop. So we must be stopping.
                 _reader.Dispose();
                 _reader = null;
 
-                // Make sure the timer stops, then get rid of it. 
+                // Make sure the timer stops, then get rid of it.
                 var h = new ManualResetEvent(false);
                 _timer.Dispose(h);
                 h.WaitOne();
@@ -295,14 +292,14 @@ namespace VideoFrameAnalyzer
                 {
                     LogMessage("Consumer: waiting for task to get added");
 
-                    // Get the next processing task. 
+                    // Get the next processing task.
                     Task<NewResultEventArgs> nextTask = null;
 
                     // Blocks if m_analysisTaskQueue.Count == 0
                     // IOE means that Take() was called on a completed collection.
                     // Some other thread can call CompleteAdding after we pass the
-                    // IsCompleted check but before we call Take. 
-                    // In this example, we can simply catch the exception since the 
+                    // IsCompleted check but before we call Take.
+                    // In this example, we can simply catch the exception since the
                     // loop will break on the next iteration.
                     // See https://msdn.microsoft.com/en-us/library/dd997371(v=vs.110).aspx
                     try
@@ -313,11 +310,11 @@ namespace VideoFrameAnalyzer
 
                     if (nextTask != null)
                     {
-                        // Block until the result becomes available. 
+                        // Block until the result becomes available.
                         LogMessage("Consumer: waiting for next result to arrive for task {0}", nextTask.Id);
                         var result = await nextTask;
 
-                        // Raise the new result event. 
+                        // Raise the new result event.
                         LogMessage("Consumer: got result for frame {0}. {1} tasks in queue", result.Frame.Metadata.Index, _analysisTaskQueue.Count);
                         OnNewResultAvailable(result);
                     }
@@ -404,13 +401,13 @@ namespace VideoFrameAnalyzer
         {
             _resetTrigger = true;
 
-            // Keep track of the next timestamp to trigger. 
+            // Keep track of the next timestamp to trigger.
             DateTime nextCall = DateTime.MinValue;
             _analysisPredicate = (VideoFrame frame) =>
             {
                 bool shouldCall = false;
 
-                // If this is the first frame, then trigger and initialize the timer. 
+                // If this is the first frame, then trigger and initialize the timer.
                 if (_resetTrigger)
                 {
                     _resetTrigger = false;
@@ -422,7 +419,7 @@ namespace VideoFrameAnalyzer
                     shouldCall = frame.Metadata.Timestamp > nextCall;
                 }
 
-                // Return. 
+                // Return.
                 if (shouldCall)
                 {
                     nextCall += interval;
@@ -504,7 +501,7 @@ namespace VideoFrameAnalyzer
             CancellationTokenSource source = new CancellationTokenSource();
 
             // Make a local reference to the function, just in case someone sets
-            // AnalysisFunction = null before we can call it. 
+            // AnalysisFunction = null before we can call it.
             var fcn = AnalysisFunction;
             if (fcn != null)
             {
@@ -536,6 +533,27 @@ namespace VideoFrameAnalyzer
             {
                 return null;
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _frameGrabTimer.Dispose();
+                    _timer?.Dispose();
+                    _timerMutex.Dispose();
+                    _analysisTaskQueue?.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
 
         #endregion Methods
