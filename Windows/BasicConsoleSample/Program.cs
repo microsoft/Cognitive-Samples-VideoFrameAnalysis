@@ -32,34 +32,41 @@
 // 
 
 using System;
+using System.Linq;
+using Microsoft.Azure.CognitiveServices.Vision.Face;
+using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using VideoFrameAnalyzer;
-using Microsoft.ProjectOxford.Face;
-using Microsoft.ProjectOxford.Face.Contract;
 
 namespace BasicConsoleSample
 {
     internal class Program
     {
+        const string ApiKey = "<your API key>";
+        const string Endpoint = "https://westus.api.cognitive.microsoft.com";
+
         private static void Main(string[] args)
         {
             // Create grabber. 
-            FrameGrabber<Face[]> grabber = new FrameGrabber<Face[]>();
+            FrameGrabber<DetectedFace[]> grabber = new FrameGrabber<DetectedFace[]>();
 
             // Create Face API Client.
-            FaceServiceClient faceClient = new FaceServiceClient("<subscription key>");
+            FaceClient faceClient = new FaceClient(new ApiKeyServiceClientCredentials(ApiKey))
+            {
+                Endpoint = Endpoint
+            };
 
             // Set up a listener for when we acquire a new frame.
             grabber.NewFrameProvided += (s, e) =>
             {
-                Console.WriteLine("New frame acquired at {0}", e.Frame.Metadata.Timestamp);
+                Console.WriteLine($"New frame acquired at {e.Frame.Metadata.Timestamp}");
             };
 
             // Set up Face API call.
             grabber.AnalysisFunction = async frame =>
             {
-                Console.WriteLine("Submitting frame acquired at {0}", frame.Metadata.Timestamp);
+                Console.WriteLine($"Submitting frame acquired at {frame.Metadata.Timestamp}");
                 // Encode image and submit to Face API. 
-                return await faceClient.DetectAsync(frame.Image.ToMemoryStream(".jpg"));
+                return (await faceClient.Face.DetectWithStreamAsync(frame.Image.ToMemoryStream(".jpg"))).ToArray();
             };
 
             // Set up a listener for when we receive a new result from an API call. 
@@ -70,7 +77,7 @@ namespace BasicConsoleSample
                 else if (e.Exception != null)
                     Console.WriteLine("API call threw an exception.");
                 else
-                    Console.WriteLine("New result received for frame acquired at {0}. {1} faces detected", e.Frame.Metadata.Timestamp, e.Analysis.Length);
+                    Console.WriteLine($"New result received for frame acquired at {e.Frame.Metadata.Timestamp}. {e.Analysis.Length} faces detected");
             };
 
             // Tell grabber when to call API.

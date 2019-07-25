@@ -31,31 +31,43 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
-using System.Linq;
-using Microsoft.ProjectOxford.Face.Contract;
-using Microsoft.ProjectOxford.Common.Contract;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 
 namespace LiveCameraSample
 {
     internal class Aggregation
     {
-        public static Tuple<string, float> GetDominantEmotion(EmotionScores scores)
+        public static KeyValuePair<string, double> GetDominantEmotion(Emotion scores)
         {
-            return scores.ToRankedList().Select(kv => new Tuple<string, float>(kv.Key, kv.Value)).First();
+            return new Dictionary<string, double>()
+                {
+                    { "Anger", scores.Anger },
+                    { "Contempt", scores.Contempt },
+                    { "Disgust", scores.Disgust },
+                    { "Fear", scores.Fear },
+                    { "Happiness", scores.Happiness },
+                    { "Neutral", scores.Neutral },
+                    { "Sadness", scores.Sadness },
+                    { "Surprise", scores.Surprise }
+                }
+                .OrderByDescending(kv => kv.Value)
+                .ThenBy(kv => kv.Key)
+                .First();
         }
 
-        public static string SummarizeEmotion(EmotionScores scores)
+        public static string SummarizeEmotion(Emotion scores)
         {
             var bestEmotion = Aggregation.GetDominantEmotion(scores);
-            return string.Format("{0}: {1:N1}", bestEmotion.Item1, bestEmotion.Item2);
+            return string.Format("{0}: {1:N1}", bestEmotion.Key, bestEmotion.Value);
         }
 
         public static string SummarizeFaceAttributes(FaceAttributes attr)
         {
             List<string> attrs = new List<string>();
-            if (attr.Gender != null) attrs.Add(attr.Gender);
+            if (attr.Gender.HasValue) attrs.Add(attr.Gender.Value.ToString());
             if (attr.Age > 0) attrs.Add(attr.Age.ToString());
             if (attr.HeadPose != null)
             {
