@@ -120,11 +120,11 @@ namespace LiveCameraSample
                     if (face.FaceAttributes != null)
                     {
                         summary.Append(Aggregation.SummarizeFaceAttributes(face.FaceAttributes));
-                    }
 
-                    if (face.FaceAttributes.Emotion != null)
-                    {
-                        summary.Append(Aggregation.SummarizeEmotion(face.FaceAttributes.Emotion));
+                        if (face.FaceAttributes.Emotion != null)
+                        {
+                            summary.Append(Aggregation.SummarizeEmotion(face.FaceAttributes.Emotion));
+                        }
                     }
 
                     if (celebName?[i] != null)

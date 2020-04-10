@@ -33,6 +33,7 @@
 
 using System;
 using System.Linq;
+using System.Net;
 using Microsoft.Azure.CognitiveServices.Vision.Face;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using VideoFrameAnalyzer;
@@ -46,6 +47,7 @@ namespace BasicConsoleSample
 
         private static void Main(string[] args)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             // Create grabber. 
             FrameGrabber<DetectedFace[]> grabber = new FrameGrabber<DetectedFace[]>();
 
@@ -75,7 +77,7 @@ namespace BasicConsoleSample
                 if (e.TimedOut)
                     Console.WriteLine("API call timed out.");
                 else if (e.Exception != null)
-                    Console.WriteLine("API call threw an exception.");
+                    Console.WriteLine($"API call threw an exception: {e.Exception}");
                 else
                     Console.WriteLine($"New result received for frame acquired at {e.Frame.Metadata.Timestamp}. {e.Analysis.Length} faces detected");
             };
