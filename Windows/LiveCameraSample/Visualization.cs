@@ -44,8 +44,11 @@ namespace LiveCameraSample
 {
     public class Visualization
     {
-        private static SolidColorBrush s_lineBrush = new SolidColorBrush(new System.Windows.Media.Color { R = 255, G = 185, B = 0, A = 255 });
-        private static Typeface s_typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal);
+        private static SolidColorBrush s_lineBrush =
+            new SolidColorBrush(new System.Windows.Media.Color {R = 255, G = 185, B = 0, A = 255});
+
+        private static Typeface s_typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal,
+            FontWeights.Bold, FontStretches.Normal);
 
         private static BitmapSource DrawOverlay(BitmapSource baseImage, Action<DrawingContext, double> drawAction)
         {
@@ -69,6 +72,7 @@ namespace LiveCameraSample
             return outputBitmap;
         }
 
+        [Obsolete]
         public static BitmapSource DrawTags(BitmapSource baseImage, VisionAPI.Models.ImageTag[] tags)
         {
             if (tags == null)
@@ -76,15 +80,14 @@ namespace LiveCameraSample
                 return baseImage;
             }
 
-            Action<DrawingContext, double> drawAction = (drawingContext, annotationScale) =>
+            void DrawAction(DrawingContext drawingContext, double annotationScale)
             {
                 double y = 0;
                 foreach (var tag in tags)
                 {
                     // Create formatted text--in a particular font at a particular size
-                    FormattedText ft = new FormattedText(tag.Name,
-                        CultureInfo.CurrentCulture, FlowDirection.LeftToRight, s_typeface,
-                        42 * annotationScale, Brushes.Black);
+                    FormattedText ft = new FormattedText(tag.Name, CultureInfo.CurrentCulture,
+                        FlowDirection.LeftToRight, s_typeface, 42 * annotationScale, Brushes.Black);
                     // Instead of calling DrawText (which can only draw the text in a solid colour), we
                     // convert to geometry and use DrawGeometry, which allows us to add an outline. 
                     var geom = ft.BuildGeometry(new System.Windows.Point(10 * annotationScale, y));
@@ -92,28 +95,32 @@ namespace LiveCameraSample
                     // Move line down
                     y += 42 * annotationScale;
                 }
-            };
+            }
 
-            return DrawOverlay(baseImage, drawAction);
+            return DrawOverlay(baseImage, DrawAction);
         }
 
-        public static BitmapSource DrawFaces(BitmapSource baseImage, FaceAPI.Models.DetectedFace[] faces, string[] celebName)
+        [Obsolete]
+        public static BitmapSource DrawFaces(BitmapSource baseImage, FaceAPI.Models.DetectedFace[] faces,
+            string[] celebName)
         {
             if (faces == null)
             {
                 return baseImage;
             }
 
-            Action<DrawingContext, double> drawAction = (drawingContext, annotationScale) =>
+            void DrawAction(DrawingContext drawingContext, double annotationScale)
             {
                 for (int i = 0; i < faces.Length; i++)
                 {
                     var face = faces[i];
-                    if (face.FaceRectangle == null) { continue; }
+                    if (face.FaceRectangle == null)
+                    {
+                        continue;
+                    }
 
-                    Rect faceRect = new Rect(
-                        face.FaceRectangle.Left, face.FaceRectangle.Top,
-                        face.FaceRectangle.Width, face.FaceRectangle.Height);
+                    Rect faceRect = new Rect(face.FaceRectangle.Left, face.FaceRectangle.Top, face.FaceRectangle.Width,
+                        face.FaceRectangle.Height);
 
                     var summary = new StringBuilder();
 
@@ -136,23 +143,18 @@ namespace LiveCameraSample
 
                     double lineThickness = 4 * annotationScale;
 
-                    drawingContext.DrawRectangle(
-                        Brushes.Transparent,
-                        new Pen(s_lineBrush, lineThickness),
-                        faceRect);
+                    drawingContext.DrawRectangle(Brushes.Transparent, new Pen(s_lineBrush, lineThickness), faceRect);
 
                     if (summary.Length > 0)
                     {
-                        FormattedText ft = new FormattedText(summary.ToString(),
-                            CultureInfo.CurrentCulture, FlowDirection.LeftToRight, s_typeface,
-                            16 * annotationScale, Brushes.Black);
+                        FormattedText ft = new FormattedText(summary.ToString(), CultureInfo.CurrentCulture,
+                            FlowDirection.LeftToRight, s_typeface, 16 * annotationScale, Brushes.Black);
 
                         var pad = 3 * annotationScale;
 
                         var ypad = pad;
                         var xpad = pad + 4 * annotationScale;
-                        var origin = new System.Windows.Point(
-                            faceRect.Left + xpad - lineThickness / 2,
+                        var origin = new System.Windows.Point(faceRect.Left + xpad - lineThickness / 2,
                             faceRect.Top - ft.Height - ypad + lineThickness / 2);
                         var rect = ft.BuildHighlightGeometry(origin).GetRenderBounds(null);
                         rect.Inflate(xpad, ypad);
@@ -161,9 +163,9 @@ namespace LiveCameraSample
                         drawingContext.DrawText(ft, origin);
                     }
                 }
-            };
+            }
 
-            return DrawOverlay(baseImage, drawAction);
+            return DrawOverlay(baseImage, DrawAction);
         }
     }
 }

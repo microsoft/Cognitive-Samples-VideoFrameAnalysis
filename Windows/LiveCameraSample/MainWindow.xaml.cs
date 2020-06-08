@@ -78,6 +78,7 @@ namespace LiveCameraSample
             Celebrities
         }
 
+        [Obsolete]
         public MainWindow()
         {
             InitializeComponent();
@@ -262,6 +263,7 @@ namespace LiveCameraSample
             };
         }
 
+        [Obsolete]
         private BitmapSource VisualizeResult(VideoFrame frame)
         {
             // Draw any results on top of the image. 

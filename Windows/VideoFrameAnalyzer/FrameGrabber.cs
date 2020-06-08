@@ -140,10 +140,6 @@ namespace VideoFrameAnalyzer
 
         #region Methods
 
-        public FrameGrabber()
-        {
-        }
-
         /// <summary> (Only available in TRACE_GRABBER builds) logs a message. </summary>
         /// <param name="format"> Describes the format to use. </param>
         /// <param name="args">   Event information. </param>
