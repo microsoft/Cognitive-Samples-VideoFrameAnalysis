@@ -133,7 +133,7 @@ namespace LiveCameraSample
                         string apiName = "";
                         string message = e.Exception.Message;
                         var faceEx = e.Exception as FaceAPI.Models.APIErrorException;
-                        var visionEx = e.Exception as VisionAPI.Models.ComputerVisionErrorException;
+                        var visionEx = e.Exception as VisionAPI.Models.ComputerVisionErrorResponseException;
                         if (faceEx != null)
                         {
                             apiName = "Face";
