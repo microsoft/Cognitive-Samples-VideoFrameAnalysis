@@ -118,7 +118,7 @@ namespace LiveCameraSample.Properties {
 
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://westus.api.cognitive.microsoft.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://westus-face-key.cognitiveservices.azure.com")]
         public string FaceAPIHost {
             get {
                 return ((string)(this["FaceAPIHost"]));
@@ -130,7 +130,7 @@ namespace LiveCameraSample.Properties {
 
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://westus.api.cognitive.microsoft.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://westus-vision-key.cognitiveservices.azure.com")]
         public string VisionAPIHost {
             get {
                 return ((string)(this["VisionAPIHost"]));
