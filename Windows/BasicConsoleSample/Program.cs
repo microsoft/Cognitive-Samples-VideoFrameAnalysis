@@ -42,13 +42,15 @@ namespace BasicConsoleSample
 {
     internal class Program
     {
-        const string ApiKey = "<your API key>";
-        const string Endpoint = "https://westus.api.cognitive.microsoft.com";
+        // Update these values before running the application
+        const string ApiKey = "<your Face API key>";
+        const string Endpoint = "<your Face API endpoint>";
 
         private static void Main(string[] args)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            // Create grabber. 
+
+            // Create grabber.
             FrameGrabber<DetectedFace[]> grabber = new FrameGrabber<DetectedFace[]>();
 
             // Create Face API Client.
@@ -67,11 +69,12 @@ namespace BasicConsoleSample
             grabber.AnalysisFunction = async frame =>
             {
                 Console.WriteLine($"Submitting frame acquired at {frame.Metadata.Timestamp}");
-                // Encode image and submit to Face API. 
+
+                // Encode image and submit to Face API.
                 return (await faceClient.Face.DetectWithStreamAsync(frame.Image.ToMemoryStream(".jpg"))).ToArray();
             };
 
-            // Set up a listener for when we receive a new result from an API call. 
+            // Set up a listener for when we receive a new result from an API call.
             grabber.NewResultAvailable += (s, e) =>
             {
                 if (e.TimedOut)
