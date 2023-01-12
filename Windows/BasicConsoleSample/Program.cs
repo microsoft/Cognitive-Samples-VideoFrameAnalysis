@@ -42,8 +42,11 @@ namespace BasicConsoleSample
 {
     internal class Program
     {
-        const string ApiKey = "<your API key>";
-        const string Endpoint = "https://westus.api.cognitive.microsoft.com";
+        //const string ApiKey = "<your API key>";
+        //const string Endpoint = "https://westus.api.cognitive.microsoft.com";
+        const string ApiKey = "eb0380ed7781462aaf0343b2e4b568f2";
+        //const string ApiKey = "85cd1a634d94423680d341a0146d3993";
+        const string Endpoint = "https://faceontest.cognitiveservices.azure.com";
 
         private static void Main(string[] args)
         {
@@ -68,7 +71,8 @@ namespace BasicConsoleSample
             {
                 Console.WriteLine($"Submitting frame acquired at {frame.Metadata.Timestamp}");
                 // Encode image and submit to Face API. 
-                return (await faceClient.Face.DetectWithStreamAsync(frame.Image.ToMemoryStream(".jpg"))).ToArray();
+                var image = frame.Image.ToMemoryStream(".jpg");
+                return (await faceClient.Face.DetectWithStreamAsync(image, returnFaceId: false)).ToArray();
             };
 
             // Set up a listener for when we receive a new result from an API call. 

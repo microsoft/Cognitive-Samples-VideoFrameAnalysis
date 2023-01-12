@@ -43,6 +43,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.Face;
+using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Newtonsoft.Json.Linq;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
@@ -72,8 +73,6 @@ namespace LiveCameraSample
         public enum AppMode
         {
             Faces,
-            Emotions,
-            EmotionsWithClientFaceDetect,
             Tags,
             Celebrities
         }
@@ -89,14 +88,6 @@ namespace LiveCameraSample
             // Set up a listener for when the client receives a new frame.
             _grabber.NewFrameProvided += (s, e) =>
             {
-                if (_mode == AppMode.EmotionsWithClientFaceDetect)
-                {
-                    // Local face detection. 
-                    var rects = _localFaceDetector.DetectMultiScale(e.Frame.Image);
-                    // Attach faces to frame. 
-                    e.Frame.UserData = rects;
-                }
-
                 // The callback may occur on a different thread, so we must use the
                 // MainWindow.Dispatcher when manipulating the UI. 
                 this.Dispatcher.BeginInvoke((Action)(() =>
@@ -173,52 +164,15 @@ namespace LiveCameraSample
             var jpg = frame.Image.ToMemoryStream(".jpg", s_jpegParams);
             // Submit image to API. 
             var attrs = new List<FaceAPI.Models.FaceAttributeType> {
-                FaceAPI.Models.FaceAttributeType.Age,
-                FaceAPI.Models.FaceAttributeType.Gender,
-                FaceAPI.Models.FaceAttributeType.HeadPose
+                FaceAPI.Models.FaceAttributeType.Glasses,
+                FaceAPI.Models.FaceAttributeType.HeadPose,
             };
-            var faces = await _faceClient.Face.DetectWithStreamAsync(jpg, returnFaceAttributes: attrs);
+
+            var faces = await _faceClient.Face.DetectWithStreamAsync(jpg, returnFaceId: false, returnFaceAttributes: attrs);
             // Count the API call. 
             Properties.Settings.Default.FaceAPICallCount++;
             // Output. 
             return new LiveCameraResult { Faces = faces.ToArray() };
-        }
-
-        /// <summary> Function which submits a frame to the Emotion API. </summary>
-        /// <param name="frame"> The video frame to submit. </param>
-        /// <returns> A <see cref="Task{LiveCameraResult}"/> representing the asynchronous API call,
-        ///     and containing the emotions returned by the API. </returns>
-        private async Task<LiveCameraResult> EmotionAnalysisFunction(VideoFrame frame)
-        {
-            // Encode image. 
-            var jpg = frame.Image.ToMemoryStream(".jpg", s_jpegParams);
-            // Submit image to API. 
-            FaceAPI.Models.DetectedFace[] faces = null;
-
-            // See if we have local face detections for this image.
-            var localFaces = (OpenCvSharp.Rect[])frame.UserData;
-            if (localFaces == null || localFaces.Count() > 0)
-            {
-                // If localFaces is null, we're not performing local face detection.
-                // Use Cognigitve Services to do the face detection.
-                Properties.Settings.Default.FaceAPICallCount++;
-                faces = (await _faceClient.Face.DetectWithStreamAsync(
-                    jpg,
-                    returnFaceId: false,
-                    returnFaceLandmarks: false,
-                    returnFaceAttributes: new FaceAPI.Models.FaceAttributeType[1] { FaceAPI.Models.FaceAttributeType.Emotion })).ToArray();
-            }
-            else
-            {
-                // Local face detection found no faces; don't call Cognitive Services.
-                faces = new FaceAPI.Models.DetectedFace[0];
-            }
-
-            // Output. 
-            return new LiveCameraResult
-            {
-                Faces = faces
-            };
         }
 
         /// <summary> Function which submits a frame to the Computer Vision API for tagging. </summary>
@@ -329,15 +283,6 @@ namespace LiveCameraSample
             {
                 case AppMode.Faces:
                     _grabber.AnalysisFunction = FacesAnalysisFunction;
-                    break;
-                case AppMode.Emotions:
-                    _grabber.AnalysisFunction = EmotionAnalysisFunction;
-                    break;
-                case AppMode.EmotionsWithClientFaceDetect:
-                    // Same as Emotions, except we will display the most recent faces combined with
-                    // the most recent API results. 
-                    _grabber.AnalysisFunction = EmotionAnalysisFunction;
-                    _fuseClientRemoteResults = true;
                     break;
                 case AppMode.Tags:
                     _grabber.AnalysisFunction = TaggingAnalysisFunction;
