@@ -11,7 +11,7 @@ This sample contains a library, along with two applications, for analyzing video
     - [Computer Vision API][]
     - [Face API][]
 2. Open the sample in Visual Studio 2015, build and run the sample applications:
-    - For BasicConsoleSample, the Face API key is hard-coded directly in [BasicConsoleSample/Program.cs](Windows/BasicConsoleSample/Program.cs).
+    - For BasicConsoleSample, please bring your own Face API key to [BasicConsoleSample/Program.cs](Windows/BasicConsoleSample/Program.cs).
     - For LiveCameraSample, the keys should be entered into the Settings pane of the app. They will be persisted across sessions as user data.
 3. Reference the VideoFrameAnalyzer library from your own projects.
 
